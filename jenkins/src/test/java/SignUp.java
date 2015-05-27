@@ -6,17 +6,18 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.SignupPage;
 
 public class SignUp {
 
     private static FirefoxDriver driver;
-    private String url = "http://seltr-kbp1-1.synapse.com:8080";
+
+    private SignupPage signupPage;
     private String name = "Andrew";
     private String password = "password123";
     private String confirmPassword = "password123";
     private String fullName = "Andrew Kors";
     private String email = "abc123@gmail.com";
-    private String signupUrl = "http://seltr-kbp1-1.synapse.com:8080/signup";
     private String signUpError = "Invalid e-mail address";
     private String errorSameUser = "User name is already taken";
     private String errorNotMatching = "Password didnt match";
@@ -26,13 +27,6 @@ public class SignUp {
     //private String alfaNum = "ASdf12";
     //private String specChar = "!@#$%^&*()";
 
-    WebElement usernameField;
-    WebElement passwordField;
-    WebElement confirmPasswordField;
-    WebElement fullNameField;
-    WebElement emailField;
-    WebElement SignupButton;
-
     @BeforeClass
     public static void startUpBrowser(){
         driver = new FirefoxDriver();
@@ -40,22 +34,15 @@ public class SignUp {
 
     @BeforeMethod
     public void setUp(){
-        //SignUp page:
-        driver.get(signupUrl);
-
-        usernameField = driver.findElement(By.id("username"));
-        passwordField = driver.findElement(By.name("password1"));
-        confirmPasswordField = driver.findElement(By.name("password2"));
-        fullNameField = driver.findElement(By.name("fullname"));
-        emailField = driver.findElement(By.name("email"));
-        SignupButton = driver.findElement(By.id("yui-gen1-button"));
+        signupPage = new SignupPage(driver);
+        signupPage.get();
     }
 
     //Sign Up with empty fields
 
     @Test
     public void invalidEmptyFields (){
-        doSignUp("", "", "", "", "");
+        signupPage.doSignUp("", "", "", "", "");
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class='error']")).getText(), signUpError, "Error");
     }
 
@@ -63,14 +50,14 @@ public class SignUp {
 
     @Test
     public void invalidNotMatchingPassword (){
-        doSignUp(name, password, "abc123", fullName, email);
+        signupPage.doSignUp(name, password, "abc123", fullName, email);
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class = 'error']")).getText(), errorNotMatching, "Error");
     }
 
     //Invalid email (without "@")
     @Test
     public void invalidEmail (){
-        doSignUp(name, password, confirmPassword, fullName, "abcgmail.com");
+        signupPage.doSignUp(name, password, confirmPassword, fullName, "abcgmail.com");
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class = 'error']")).getText(), errorIncorrectEmail, "Error");
     }
 
@@ -78,7 +65,7 @@ public class SignUp {
 
     @Test
     public void validSignUp(){
-        doSignUp(name, password, confirmPassword, fullName, email);
+        signupPage.doSignUp(name, password, confirmPassword, fullName, email);
         //logged in page
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class='model-link inside inverse']/b")).getText().trim(), fullName, "Error");
     }
@@ -87,22 +74,13 @@ public class SignUp {
 
    @Test
     public void userAlreadyExistTest(){
-       doSignUp(name, password, confirmPassword, fullName, email);
+       signupPage.doSignUp(name, password, confirmPassword, fullName, email);
         //logged in page
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class='model-link inside inverse']/b")).getText().trim(), fullName, "Error");
-       driver.get(signupUrl);
+       signupPage.doLogout();
         //SignUp page:
-       doSignUp(name, password, confirmPassword, fullName, email);
+       signupPage.doSignUp(name, password, confirmPassword, fullName, email);
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class = 'error']")).getText(), errorSameUser, "Error");
-    }
-
-    private void doSignUp(String name, String password, String confirmPassword, String fullName, String email) {
-        usernameField.sendKeys(name);
-        passwordField.sendKeys(password);
-        confirmPasswordField.sendKeys(confirmPassword);
-        fullNameField.sendKeys(fullName);
-        emailField.sendKeys(email);
-        SignupButton.click();
     }
 
     @AfterClass
