@@ -12,7 +12,7 @@ public class LoginPage extends LoadableComponent<LoginPage>{
 
     private static WebDriver driver;
 
-    private String urlLogin = "http://clm-aus-002258.bmc.com:8080/login?from=%2F";
+    private String urlLogin = "http://seltr-kbp1-1.synapse.com:8080/login?from=%2F";
 
     @FindBy (id = "j_username")
     private WebElement userField;

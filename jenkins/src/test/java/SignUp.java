@@ -14,8 +14,8 @@ public class SignUp {
 
     private SignupPage signupPage;
     private String name = "Andrew";
-    private String password = "password123";
-    private String confirmPassword = "password123";
+    private String password = "password";
+    private String confirmPassword = "password";
     private String fullName = "Andrew Kors";
     private String email = "abc123@gmail.com";
     private String signUpError = "Invalid e-mail address";
@@ -79,6 +79,7 @@ public class SignUp {
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class='model-link inside inverse']/b")).getText().trim(), fullName, "Error");
        signupPage.doLogout();
         //SignUp page:
+       driver.get("http://seltr-kbp1-1.synapse.com:8080/signup");
        signupPage.doSignUp(name, password, confirmPassword, fullName, email);
         Assert.assertEquals(driver.findElement(By.xpath(".//*[@class = 'error']")).getText(), errorSameUser, "Error");
     }

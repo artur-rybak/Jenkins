@@ -1,5 +1,8 @@
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -7,6 +10,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.LoginPage;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Login {
 
@@ -22,6 +28,7 @@ public class Login {
 
     @BeforeClass
     public static void startUpBrowser() {
+        //System.setProperty("webdriver.chrome.driver", "C://Program Files//chromedriver//chromedriver.exe");
         driver = new FirefoxDriver();
     }
 
@@ -60,6 +67,16 @@ public class Login {
         loginPage.doLogin(username, password);
         //logged in page
         Assert.assertEquals(driver.findElement(By.xpath("//*[@class='model-link inside inverse']/b")).getText().trim(), fullName, "Error");
+        takeScreenshot();
+    }
+
+    public static void takeScreenshot (){
+        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        try {
+            FileUtils.copyFile(scrFile, new File("D:\\Artur\\Automation\\scr\\screen1.png"), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterClass

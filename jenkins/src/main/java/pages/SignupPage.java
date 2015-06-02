@@ -12,7 +12,7 @@ public class SignupPage extends LoadableComponent<SignupPage> {
 
     private static WebDriver driver;
 
-    private String signupUrl = "http://clm-aus-002258.bmc.com:8080/signup";
+    private String signupUrl = "http://seltr-kbp1-1.synapse.com:8080/signup";
 
     @FindBy (id = "username")
     WebElement usernameField;
@@ -33,7 +33,7 @@ public class SignupPage extends LoadableComponent<SignupPage> {
     WebElement SignupButton;
 
     @FindBy (xpath = ".//*[@href='/logout']")
-    private WebElement logoutButton;
+    WebElement logoutButton;
 
     public SignupPage (WebDriver driver){
         this.driver = driver;
