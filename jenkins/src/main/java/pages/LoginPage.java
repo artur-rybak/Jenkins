@@ -1,48 +1,45 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.LoadableComponent;
-import org.testng.Assert;
 
-public class LoginPage extends LoadableComponent<LoginPage>{
+import static org.testng.Assert.assertTrue;
 
-    private static WebDriver driver;
+public class LoginPage extends Page<LoginPage> {
 
-    private String urlLogin = "http://seltr-kbp1-1.synapse.com:8080/login?from=%2F";
-
-    @FindBy (id = "j_username")
-    private WebElement userField;
-
-    @FindBy (name = "j_password")
-    private WebElement passwordField;
-
-    @FindBy (id = "yui-gen1-button")
+    @FindBy(xpath = ".//*[@href='/login?from=%2F']")
     private WebElement loginButton;
 
-    public LoginPage (WebDriver driver){
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+    @FindBy(id = "j_username")
+    private WebElement userField;
+
+    @FindBy(name = "j_password")
+    private WebElement passwordField;
+
+    @FindBy(id = "yui-gen1-button")
+    private WebElement submitLoginButton;
+
+    public LoginPage(WebDriver driver) {
+        super(driver);
     }
 
-    public void doLogin (String username, String password){
+    @Override
+    public String getPageURL() {
+        return "http://seltr-kbp1-1.synapse.com:8080/login?from=%2F";
+    }
+
+    @Override
+    protected void checkUniqueElements() throws Error {
+        assertTrue(submitLoginButton.isDisplayed());
+    }
+
+    public HomePage doLogin(String username, String password) {
+        log.info("Execute login with name: '" + username + "', password: '" + password + "'");
+        loginButton.click();
         userField.sendKeys(username);
         passwordField.sendKeys(password);
-        loginButton.click();
+        submitLoginButton.click();
+        return new HomePage(wd);
     }
-
-    @Override
-    protected void load() {
-        driver.get(urlLogin);
-    }
-
-    @Override
-    protected void isLoaded() throws Error {
-        String url = driver.getCurrentUrl();
-        Assert.assertEquals(url, urlLogin, "Incorrect page: " + url);
-    }
-
 }

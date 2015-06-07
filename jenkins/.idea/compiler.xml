@@ -26,5 +26,8 @@
         <module name="jenkins" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jenkins" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
